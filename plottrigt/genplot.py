@@ -8,6 +8,7 @@ from .params import *
 class GenerativePlot:
 
     def __init__(self, f1=None, f2=None):
+        matplotlib.use("TkAgg")
         _set_params(self, f1, f2)
 
         #if self.f1 is None:
@@ -42,14 +43,24 @@ class GenerativePlot:
                 print(e.message())
 
 
-    def plot(self, size=None, projection=None, linewidth=None):
+    def plot(self, color=None, bgcolor=None, projection=None, linewidth=None):
+        if color is not None:
+            self.color = color
+        if bgcolor is not None:
+            self.bgcolor = bgcolor
+        if projection is not None:
+            self.projection = projection.value
+        if linewidth is not None:
+            self.linewidth = linewidth
+
         figure = matplt.figure()
         figure.set_size_inches(self.size[0], self.size[1]) #TODO: only in inches...
-        ax = figure.add_subplot(111, projection=self.projection)
+        ax = figure.add_subplot(111, facecolor=self.bgcolor, projection=self.projection)
         ax.scatter(
             self.data2,
             self.data1,
             c=self.color,
+            alpha=self.alpha,
             s=self.spot_size,
             lw=self.linewidth)
         ax.set_axis_off()
@@ -58,7 +69,11 @@ class GenerativePlot:
         self.figure = figure
 
     def show(self):
+        matplt.interactive(False)
         matplt.show()
+    
+    def save(self):
+        matplt.savefig("test.svg", format="svg")
 
 def _set_params(gp, f1, f2):
     gp.f1 = f1

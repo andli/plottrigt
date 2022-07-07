@@ -12,5 +12,6 @@ def f2(x,y):
 
 gp = GenerativePlot(f1, f2)
 gp.generate(seed=829730)
-gp.plot(projection=Projection.POLAR)
+gp.plot(color="white", bgcolor="black", projection=Projection.POLAR)
+#gp.save()
 gp.show()
