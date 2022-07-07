@@ -26,7 +26,8 @@ class GenerativePlot:
             start=None,
             step=None,
             stop=None):
-
+        if step is not None:
+            self.step = step
         if seed is None:
             seed = random.randint(SEED_LOWER_BOUND, SEED_UPPER_BOUND)
         self.seed = seed
@@ -38,9 +39,10 @@ class GenerativePlot:
         range_prod = list(itertools.product(range1, range2))
         for point in range_prod:
             try:
-                fill_data(self, point)
+                fill_point_data(self, point)
             except Exception as e:
                 print(e.message())
+        print(f"{len(range_prod)} points generated.")
 
 
     def plot(self, color=None, bgcolor=None, projection=None, linewidth=None):
@@ -72,7 +74,7 @@ class GenerativePlot:
         matplt.interactive(False)
         matplt.show()
     
-    def save(self):
+    def save_svg(self):
         matplt.savefig("test.svg", format="svg")
 
 def _set_params(gp, f1, f2):
@@ -101,16 +103,7 @@ def float_range(start, stop, step):
         yield float(start)
         start += step
 
-def fill_data(g, point):
-    """
-    Fill data with functions in given points.
-
-    :param g: generative image instance
-    :type g: GenerativeImage
-    :param point: given point
-    :type point: tuple
-    :return: false if some exception occurred
-    """
+def fill_point_data(g, point):
     random.seed(g.seed)
     try:
         data1_ = g.f1(point[0], point[1]).real
